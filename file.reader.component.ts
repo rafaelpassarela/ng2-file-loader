@@ -38,9 +38,15 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 
 export class FileReaderComponent {
-    @Input() enabled: boolean = false;
-    @Input() caption: string;
-
+    @Input() enabled: boolean = true;
+    @Input() caption: string = "Load File";
+    /**
+     * readMode:
+     *   text:  read the contents of the file as a text string.
+     *   data:  the data as a URL representing the file's data as a base64 encoded string (like images)
+     *   array: the result attribute contains an ArrayBuffer representing the file's data.
+     */
+    @Input() readMode: string = "text";
     @Output() onCallback: EventEmitter<any> = new EventEmitter();
 
     constructor() { }
@@ -49,7 +55,13 @@ export class FileReaderComponent {
         let self = this;
         let file: File = $event.target.files[0];
         let myReader: FileReader = new FileReader();
-        myReader.readAsText(file);
+
+        if (this.readMode == "array")
+            myReader.readAsArrayBuffer(file)
+        else if (this.readMode == "data")
+            myReader.readAsDataURL(file);
+        else // text
+            myReader.readAsText(file);
 
         let resultSet = new Array<any>();
         myReader.onloadend = function (e) {
@@ -61,12 +73,11 @@ export class FileReaderComponent {
             // }
 
             resultSet = myReader.result;
-
-            self.readDone(resultSet);
+            self.onReadDone(resultSet);
         };
     }
 
-    readDone(text: any) {
+    onReadDone(text: any) {
         this.onCallback.emit(text);
     }
 
