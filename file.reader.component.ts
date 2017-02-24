@@ -28,7 +28,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 <div>
     <label for="file-input" class="input-label">        
         <button class="btn btn-primary" (click)="onClickHandle()" [ngClass]="{'disabled': !enabled}">
-            {{caption}}
+            <span class="glyphicon glyphicon-{{image}}" aria-hidden="true"></span>&nbsp;&nbsp;{{caption}}
         </button>
         <input type="file" id="file-input" (change)="changeListener($event)">            
     </label>
@@ -47,6 +47,7 @@ export class FileReaderComponent {
      *   array: the result attribute contains an ArrayBuffer representing the file's data.
      */
     @Input() readMode: string = "text";
+    @Input() image: string = "folder-open";
     @Input() onValidate: (value: File) => boolean;
     @Output() onCallback: EventEmitter<any> = new EventEmitter();
 
