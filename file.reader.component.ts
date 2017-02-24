@@ -47,6 +47,7 @@ export class FileReaderComponent {
      *   array: the result attribute contains an ArrayBuffer representing the file's data.
      */
     @Input() readMode: string = "text";
+    @Input() onValidate: (value: File) => boolean;
     @Output() onCallback: EventEmitter<any> = new EventEmitter();
 
     constructor() { }
@@ -56,25 +57,18 @@ export class FileReaderComponent {
         let file: File = $event.target.files[0];
         let myReader: FileReader = new FileReader();
 
-        if (this.readMode == "array")
-            myReader.readAsArrayBuffer(file)
-        else if (this.readMode == "data")
-            myReader.readAsDataURL(file);
-        else // text
-            myReader.readAsText(file);
+        if (this.doValidate(file)) {
+            if (this.readMode == "array")
+                myReader.readAsArrayBuffer(file)
+            else if (this.readMode == "data")
+                myReader.readAsDataURL(file);
+            else // text
+                myReader.readAsText(file);
 
-        let resultSet = new Array<any>();
-        myReader.onloadend = function (e) {
-            // you can perform an action with data read here
-            // as an example i am just splitting strings by spaces
-            // var columns = myReader.result.split(/\r\n|\r|\n/g);
-            // for (var i = 0; i < columns.length; i++) {
-            //     resultSet.push(columns[i].split(' '));
-            // }
-
-            resultSet = myReader.result;
-            self.onReadDone(resultSet);
-        };
+            myReader.onloadend = function (e) {
+                self.onReadDone(myReader.result);
+            };
+        }
     }
 
     onReadDone(text: any) {
@@ -84,6 +78,15 @@ export class FileReaderComponent {
     onClickHandle() {
         let file = document.getElementById('file-input');
         file.click();
+    }
+
+    doValidate(file: File) {
+        let value: boolean = false;
+        
+        if (this.onValidate != undefined) {
+            value = this.onValidate(file);
+        }
+        return value;
     }
 
 }
