@@ -49,7 +49,7 @@ import { Title } from '@angular/platform-browser';
     selector: 'my-demo-comp',
     template: `
 	
-	<filereader [caption]="'Select File'" [readMode]="text" [enabled]="true" [onValidate]="doValidateFile" (onCallback)="doLoadReadFile($event)"></filereader>
+	<filereader [caption]="'Select File'" [readMode]="text" [enabled]="true" [onValidate]="doValidateFile" (onCallback)="doReadFile($event)"></filereader>
 	<br>
 	<hr> Filename: [{{fileName}}]
 	<hr> Data: [{{data}}]
@@ -78,7 +78,7 @@ export class ResumeEditComponent {
         this._titleService.setTitle('My Sample Component Demo');
     }
 
-    doLoadReadFile($event: any) {
+    doReadFile($event: any) {
         this.data = $event;
     }
 
