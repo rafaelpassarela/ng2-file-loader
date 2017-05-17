@@ -27,7 +27,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 <div>
     <label for="file-input" class="input-label">        
-        <button class="btn btn-primary" (click)="onClickHandle()" [ngClass]="{'disabled': !enabled}">
+        <button style="width: 160px" class="btn btn-primary" (click)="onClickHandle()" [ngClass]="{'disabled': !enabled}">
             <span class="glyphicon glyphicon-{{image}}" aria-hidden="true"></span>&nbsp;&nbsp;{{caption}}
         </button>
         <input type="file" id="file-input" (change)="changeListener($event)">            
